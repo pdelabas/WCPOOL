@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 World Cup Pool Tracker</title>
+    <title>2026 World Cup Pool HQ</title>
     <style>
         :root {
-            --bg-main: #0f0f12;       /* Sleek Black */
+            --bg-main: #0b0b0d;       /* Deep Sleek Black */
             --bg-card: #16161a;       /* Dark Gray Card */
-            --accent-blue: #2563eb;   /* Main Blue */
-            --light-blue: #3b82f6;    /* Electric Blue */
-            --outline-red: #ef4444;   /* Box Outline Red */
+            --accent-blue: #2563eb;   /* Main Blue Buttons */
+            --light-blue: #3b82f6;    /* Electric Blue Headlines */
+            --border-slate: #27272a;  /* Toned-down Slate Gray Outline */
             --text-white: #ffffff;    /* Pure White */
             --text-muted: #94a3b8;    /* Soft Gray */
-            --success-green: #22c55e; /* Vibrant Green for correct picks */
-            --success-bg: rgba(34, 197, 94, 0.15);
+            
+            /* Dynamic Status Highlights */
+            --success-green: #22c55e; 
+            --success-bg: rgba(34, 197, 94, 0.12);
+            --warning-yellow: #eab308;
+            --warning-bg: rgba(234, 179, 8, 0.12);
         }
         
         body {
@@ -29,83 +33,22 @@
         
         .container {
             width: 100%;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: 1fr;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
             gap: 25px;
-        }
-
-        @media (min-width: 850px) {
-            .container {
-                grid-template-columns: 320px 1fr;
-            }
-            .header-main {
-                grid-column: span 2;
-            }
         }
         
         .header-main h1 {
             text-align: center;
             color: var(--light-blue);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-size: 2.2rem;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        /* Leaderboard Panel */
-        .leaderboard-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            border: 2px solid var(--outline-red);
-            height: fit-content;
-        }
-
-        .leaderboard-title {
-            color: var(--light-blue);
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #27272a;
-            padding-bottom: 8px;
-            text-align: center;
-        }
-
-        .leaderboard-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5px;
-            border-bottom: 1px solid #27272a;
-        }
-
-        .rank-badge {
-            background: #27272a;
-            color: var(--text-white);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .leaderboard-row.rank-0 .rank-badge { background: #eab308; color: #000; } 
-        .leaderboard-row.rank-1 .rank-badge { background: #cbd5e1; color: #000; } 
-        
-        .player-points {
-            font-weight: bold;
-            color: var(--light-blue);
-        }
-        
-        /* Main Workspace Panels */
-        .main-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
+        /* Slider Control Panel */
         .slider-controls {
             display: flex;
             justify-content: space-between;
@@ -113,7 +56,7 @@
             background: var(--bg-card);
             padding: 15px 25px;
             border-radius: 12px;
-            border: 2px solid var(--outline-red);
+            border: 1px solid var(--border-slate);
         }
         
         .stage-title {
@@ -136,15 +79,15 @@
         }
         
         .btn:disabled {
-            background-color: #27272a;
-            color: #71717a;
-            border: 1px solid #3f3f46;
+            background-color: #1f1f23;
+            color: #52525b;
+            border: 1px solid var(--border-slate);
             cursor: not-allowed;
         }
         
         .btn:not(:disabled):hover {
             background-color: #1d4ed8;
-            box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
         }
 
         /* Real Standings Table Style */
@@ -152,7 +95,7 @@
             background: var(--bg-card);
             border-radius: 12px;
             padding: 20px;
-            border: 2px solid var(--accent-blue);
+            border: 1px solid var(--border-slate);
         }
 
         .standings-panel h3 {
@@ -160,7 +103,7 @@
             margin-bottom: 15px;
             color: var(--light-blue);
             text-transform: uppercase;
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 1px;
         }
 
@@ -170,33 +113,33 @@
         }
 
         .standings-table th, .standings-table td {
-            padding: 8px 12px;
+            padding: 10px 12px;
             text-align: left;
         }
 
         .standings-table th {
             color: var(--text-muted);
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            border-bottom: 1px solid #27272a;
+            border-bottom: 1px solid var(--border-slate);
         }
 
         .standings-table td {
-            border-bottom: 1px solid #1f1f23;
+            border-bottom: 1px solid #1c1c21;
         }
 
         /* Picks Display Section */
         .picks-section h3 {
-            color: var(--outline-red);
+            color: var(--text-muted);
             text-transform: uppercase;
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 1px;
             margin-bottom: 15px;
         }
 
         .picks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         
@@ -204,7 +147,7 @@
             background: var(--bg-card);
             border-radius: 12px;
             padding: 20px;
-            border: 2px solid var(--outline-red);
+            border: 1px solid var(--border-slate);
         }
         
         .player-name {
@@ -213,23 +156,38 @@
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 12px;
-            border-bottom: 1px solid #27272a;
+            border-bottom: 1px solid var(--border-slate);
             padding-bottom: 8px;
         }
         
         .pick-row {
             margin: 6px 0;
-            padding: 6px 8px;
+            padding: 6px 10px;
             border-radius: 6px;
             display: flex;
             justify-content: space-between;
+            font-size: 14px;
+            border: 1px solid transparent;
         }
 
-        /* The Highlight Classes */
-        .match-highlight {
+        .pos-num {
+            color: var(--text-muted);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Dynamic Highlighting Rules */
+        .match-correct-advance {
             background-color: var(--success-bg);
             border: 1px solid var(--success-green);
             color: var(--success-green);
+            font-weight: bold;
+        }
+
+        .match-correct-third {
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-yellow);
+            color: var(--warning-yellow);
             font-weight: bold;
         }
     </style>
@@ -241,128 +199,350 @@
         <h1>🏆 World Cup Pool Tracker</h1>
     </div>
 
-    <!-- Live Standings Sidebar -->
-    <div class="leaderboard-card">
-        <h2 class="leaderboard-title">📊 Pool Leaderboard</h2>
-        <div id="leaderboardList"></div>
+    <!-- Controls -->
+    <div class="slider-controls">
+        <button id="prevBtn" class="btn" onclick="changeStage(-1)">← Prev</button>
+        <h2 id="currentStage" class="stage-title">Group A</h2>
+        <button id="nextBtn" class="btn" onclick="changeStage(1)">Next →</button>
     </div>
 
-    <!-- Main Workspace -->
-    <div class="main-panel">
-        <!-- Next/Prev Controls -->
-        <div class="slider-controls">
-            <button id="prevBtn" class="btn" onclick="changeStage(-1)">← Prev</button>
-            <h2 id="currentStage" class="stage-title">Group A</h2>
-            <button id="nextBtn" class="btn" onclick="changeStage(1)">Next →</button>
-        </div>
+    <!-- Real Live Group Standings Table -->
+    <div id="standingsContainer" class="standings-panel">
+        <h3 id="standingsTitle">Live Standings</h3>
+        <table class="standings-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Pos</th>
+                    <th>Team</th>
+                    <th style="text-align: center; width: 60px;">GD</th>
+                    <th style="text-align: center; width: 60px;">PTS</th>
+                </tr>
+            </thead>
+            <tbody id="standingsBody"></tbody>
+        </table>
+    </div>
 
-        <!-- Real Group Standings (Changes with Slide) -->
-        <div id="standingsContainer" class="standings-panel">
-            <h3 id="standingsTitle">Live Group Standings</h3>
-            <table class="standings-table">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">Pos</th>
-                        <th>Team</th>
-                        <th style="text-align: center; width: 60px;">GD</th>
-                        <th style="text-align: center; width: 60px;">PTS</th>
-                    </tr>
-                </thead>
-                <tbody id="standingsBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Player Picks Container -->
-        <div class="picks-section">
-            <h3>👥 Player Predictions</h3>
-            <div id="picksGrid" class="picks-grid"></div>
-        </div>
+    <!-- Player Predictions Matrix Layout -->
+    <div class="picks-section">
+        <h3>👥 Player Predictions</h3>
+        <div id="picksGrid" class="picks-grid"></div>
     </div>
 </div>
 
 <script>
-    const stages = ["Group A", "Group B", "Group C", "Knockouts"];
+    const stages = [
+        "Group A", "Group B", "Group C", "Group D", "Group E", "Group F", 
+        "Group G", "Group H", "Group I", "Group J", "Group K", "Group L"
+    ];
     let currentStageIndex = 0;
 
-    /* 
-      =========================================
-      1. REAL TIME TOURNAMENT DATA
-      =========================================
-      Matches Inputted:
-      - Mexico 2 - 0 South Africa
-      - South Korea 2 - 1 Czechia
+    /* =========================================================================
+      1. REAL TIME TOURNAMENT DATA ENGINE
+      =========================================================================
+      To update live data: Just change 'pts' and 'gd' next to any team below.
+      The standings list and player cards refresh/resort dynamically instantly!
     */
     const realTimeStandings = {
         "Group A": [
-            { team: "Mexico", pts: 3, gd: 2 },
-            { team: "Canada", pts: 0, gd: 0 },
-            { team: "Switzerland", pts: 0, gd: 0 },
-            { team: "South Africa", pts: 0, gd: -2 }
+            { team: "🇲🇽 Mexico", nameKey: "Mexico", pts: 3, gd: 2 },
+            { team: "🇰🇷 South Korea", nameKey: "South Korea", pts: 3, gd: 1 },
+            { team: "🇨🇿 Czechia", nameKey: "Czechia", pts: 0, gd: -1 },
+            { team: "🇿🇦 South Africa", nameKey: "South Africa", pts: 0, gd: -2 }
         ],
         "Group B": [
-            { team: "South Korea", pts: 3, gd: 1 },
-            { team: "Germany", pts: 0, gd: 0 },
-            { team: "USA", pts: 0, gd: 0 },
-            { team: "Czechia", pts: 0, gd: -1 }
+            { team: "🇨🇦 Canada", nameKey: "Canada", pts: 0, gd: 0 },
+            { team: "🇨🇭 Switzerland", nameKey: "Switzerland", pts: 0, gd: 0 },
+            { team: "🇧🇦 Bosnia and Herzegovina", nameKey: "Bosnia and Herzegovina", pts: 0, gd: 0 },
+            { team: "🇶🇦 Qatar", nameKey: "Qatar", pts: 0, gd: 0 }
         ],
         "Group C": [
-            { team: "Brazil", pts: 0, gd: 0 },
-            { team: "Morocco", pts: 0, gd: 0 },
-            { team: "Scotland", pts: 0, gd: 0 },
-            { team: "Poland", pts: 0, gd: 0 }
+            { team: "🇧🇷 Brazil", nameKey: "Brazil", pts: 0, gd: 0 },
+            { team: "🇲🇦 Morocco", nameKey: "Morocco", pts: 0, gd: 0 },
+            { team: "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland", nameKey: "Scotland", pts: 0, gd: 0 },
+            { team: "🇭🇹 Haiti", nameKey: "Haiti", pts: 0, gd: 0 }
+        ],
+        "Group D": [
+            { team: "🇺🇸 United States", nameKey: "United States", pts: 0, gd: 0 },
+            { team: "🇹🇷 Türkiye", nameKey: "Türkiye", pts: 0, gd: 0 },
+            { team: "🇵🇾 Paraguay", nameKey: "Paraguay", pts: 0, gd: 0 },
+            { team: "🇦🇺 Australia", nameKey: "Australia", pts: 0, gd: 0 }
+        ],
+        "Group E": [
+            { team: "🇩🇪 Germany", nameKey: "Germany", pts: 0, gd: 0 },
+            { team: "🇪🇨 Ecuador", nameKey: "Ecuador", pts: 0, gd: 0 },
+            { team: "🇨🇮 Ivory Coast", nameKey: "Ivory Coast", pts: 0, gd: 0 },
+            { team: "🇨🇼 Curaçao", nameKey: "Curaçao", pts: 0, gd: 0 }
+        ],
+        "Group F": [
+            { team: "🇳🇱 Netherlands", nameKey: "Netherlands", pts: 0, gd: 0 },
+            { team: "🇯🇵 Japan", nameKey: "Japan", pts: 0, gd: 0 },
+            { team: "🇸🇪 Sweden", nameKey: "Sweden", pts: 0, gd: 0 },
+            { team: "🇹🇳 Tunisia", nameKey: "Tunisia", pts: 0, gd: 0 }
+        ],
+        "Group G": [
+            { team: "🇧🇪 Belgium", nameKey: "Belgium", pts: 0, gd: 0 },
+            { team: "🇪🇬 Egypt", nameKey: "Egypt", pts: 0, gd: 0 },
+            { team: "🇮🇷 Iran", nameKey: "Iran", pts: 0, gd: 0 },
+            { team: "🇳🇿 New Zealand", nameKey: "New Zealand", pts: 0, gd: 0 }
+        ],
+        "Group H": [
+            { team: "🇪🇸 Spain", nameKey: "Spain", pts: 0, gd: 0 },
+            { team: "🇺🇾 Uruguay", nameKey: "Uruguay", pts: 0, gd: 0 },
+            { team: "🇸🇦 Saudi Arabia", nameKey: "Saudi Arabia", pts: 0, gd: 0 },
+            { team: "🇨🇻 Cape Verde", nameKey: "Cape Verde", pts: 0, gd: 0 }
+        ],
+        "Group I": [
+            { team: "🇫🇷 France", nameKey: "France", pts: 0, gd: 0 },
+            { team: "🇳🇴 Norway", nameKey: "Norway", pts: 0, gd: 0 },
+            { team: "🇸🇳 Senegal", nameKey: "Senegal", pts: 0, gd: 0 },
+            { team: "🇮🇶 Iraq", nameKey: "Iraq", pts: 0, gd: 0 }
+        ],
+        "Group J": [
+            { team: "🇦🇷 Argentina", nameKey: "Argentina", pts: 0, gd: 0 },
+            { team: "🇦🇹 Austria", nameKey: "Austria", pts: 0, gd: 0 },
+            { team: "🇩🇿 Algeria", nameKey: "Algeria", pts: 0, gd: 0 },
+            { team: "🇯🇴 Jordan", nameKey: "Jordan", pts: 0, gd: 0 }
+        ],
+        "Group K": [
+            { team: "🇵🇹 Portugal", nameKey: "Portugal", pts: 0, gd: 0 },
+            { team: "🇨🇴 Colombia", nameKey: "Colombia", pts: 0, gd: 0 },
+            { team: "🇨🇩 DR Congo", nameKey: "DR Congo", pts: 0, gd: 0 },
+            { team: "🇺🇿 Uzbekistan", nameKey: "Uzbekistan", pts: 0, gd: 0 }
+        ],
+        "Group L": [
+            { team: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", nameKey: "England", pts: 0, gd: 0 },
+            { team: "🇭🇷 Croatia", nameKey: "Croatia", pts: 0, gd: 0 },
+            { team: "🇬🇭 Ghana", nameKey: "Ghana", pts: 0, gd: 0 },
+            { team: "🇵🇦 Panama", nameKey: "Panama", pts: 0, gd: 0 }
         ]
     };
 
-    /* 
-      =========================================
-      2. MOCK POOL PARTICIPANTS & BALLOTS
-      =========================================
+    // Quick map to easily append emojis onto raw player prediction values
+    const flagMapping = {
+        "Mexico": "🇲🇽 Mexico", "South Korea": "🇰🇷 South Korea", "Czechia": "🇨🇿 Czechia", "South Africa": "🇿🇦 South Africa",
+        "Canada": "🇨🇦 Canada", "Switzerland": "🇨🇭 Switzerland", "Bosnia and Herzegovina": "🇧🇦 Bosnia and Herzegovina", "Qatar": "🇶🇦 Qatar",
+        "Brazil": "🇧🇷 Brazil", "Morocco": "🇲🇦 Morocco", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland", "Haiti": "🇭🇹 Haiti",
+        "United States": "🇺🇸 United States", "Türkiye": "🇹🇷 Türkiye", "Paraguay": "🇵🇾 Paraguay", "Australia": "🇦🇺 Australia",
+        "Germany": "🇩🇪 Germany", "Ecuador": "🇪🇨 Ecuador", "Ivory Coast": "🇨🇮 Ivory Coast", "Curaçao": "🇨🇼 Curaçao",
+        "Netherlands": "🇳🇱 Netherlands", "Japan": "🇯🇵 Japan", "Sweden": "🇸🇪 Sweden", "Tunisia": "🇹🇳 Tunisia",
+        "Belgium": "🇧🇪 Belgium", "Egypt": "🇪🇬 Egypt", "Iran": "🇮🇷 Iran", "New Zealand": "🇳🇿 New Zealand",
+        "Spain": "🇪🇸 Spain", "Uruguay": "🇺🇾 Uruguay", "Saudi Arabia": "🇸🇦 Saudi Arabia", "Cape Verde": "🇨🇻 Cape Verde",
+        "France": "🇫🇷 France", "Norway": "🇳🇴 Norway", "Senegal": "🇸🇳 Senegal", "Iraq": "🇮🇶 Iraq",
+        "Argentina": "🇦🇷 Argentina", "Austria": "🇦🇹 Austria", "Algeria": "🇩🇿 Algeria", "Jordan": "🇯🇴 Jordan",
+        "Portugal": "🇵🇹 Portugal", "Colombia": "🇨🇴 Colombia", "DR Congo": "🇨🇩 DR Congo", "Uzbekistan": "🇺🇿 Uzbekistan",
+        "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England", "Croatia": "🇭🇷 Croatia", "Ghana": "🇬🇭 Ghana", "Panama": "🇵🇦 Panama"
+    };
+
+    /* =========================================================================
+      2. COMPILATION MATRIX OF YOUR 12 VALIDATED PARTICIPANTS
+      =========================================================================
     */
     const participants = [
         {
-            name: "Alex",
-            points: 5,
+            name: "Michael Fournier",
             picks: {
-                "Group A": { first: "Mexico", second: "Canada" },
-                "Group B": { first: "Germany", second: "USA" },
-                "Group C": { first: "Brazil", second: "Morocco" },
-                "Knockouts": "🏆 Champ: France"
+                "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
+                "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["United States", "Türkiye", "Paraguay", "Australia"],
+                "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Norway", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
             }
         },
         {
-            name: "Jordan",
-            points: 3,
+            name: "Pat",
             picks: {
-                "Group A": { first: "Canada", second: "Mexico" },
-                "Group B": { first: "Germany", second: "South Korea" },
-                "Group C": { first: "Morocco", second: "Brazil" },
-                "Knockouts": "🏆 Champ: Argentina"
+                "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
+                "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Morocco", "Brazil", "Scotland", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Paraguay", "Australia"],
+                "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+                "Group F": ["Japan", "Netherlands", "Tunisia", "Sweden"],
+                "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["Norway", "France", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Algeria", "Austria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
+                "Group L": ["England", "Croatia", "Panama", "Ghana"]
             }
         },
         {
-            name: "Taylor",
-            points: 0,
+            name: "Eve",
             picks: {
-                "Group A": { first: "Switzerland", second: "South Africa" },
-                "Group B": { first: "South Korea", second: "Germany" },
-                "Group C": { first: "Poland", second: "Scotland" },
-                "Knockouts": "🏆 Champ: Brazil"
+                "Group A": ["South Korea", "South Africa", "Mexico", "Czechia"],
+                "Group B": ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
+                "Group C": ["Brazil", "Haiti", "Morocco", "Scotland"],
+                "Group D": ["United States", "Paraguay", "Australia", "Türkiye"],
+                "Group E": ["Ecuador", "Curaçao", "Germany", "Ivory Coast"],
+                "Group F": ["Japan", "Tunisia", "Sweden", "Netherlands"],
+                "Group G": ["Egypt", "Belgium", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
+                "Group I": ["France", "Norway", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Colombia", "Portugal", "DR Congo", "Uzbekistan"],
+                "Group L": ["Panama", "Ghana", "England", "Croatia"]
+            }
+        },
+        {
+            name: "Olivia Tonelli",
+            picks: {
+                "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["United States", "Australia", "Türkiye", "Paraguay"],
+                "Group E": ["Germany", "Ivory Coast", "Ecuador", "Curaçao"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Norway", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Alessandro",
+            picks: {
+                "Group A": ["South Korea", "Mexico", "Czechia", "South Africa"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Australia", "Paraguay"],
+                "Group E": ["Ivory Coast", "Germany", "Ecuador", "Curaçao"],
+                "Group F": ["Netherlands", "Sweden", "Japan", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "New Zealand", "Iran"],
+                "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
+                "Group I": ["Norway", "France", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Emily Tomlinson",
+            picks: {
+                "Group A": ["Mexico", "South Korea", "South Africa", "Czechia"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["Australia", "United States", "Türkiye", "Paraguay"],
+                "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Belgium", "Iran", "Egypt", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Senegal", "Norway", "Iraq"],
+                "Group J": ["Argentina", "Algeria", "Austria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["England", "Croatia", "Panama", "Ghana"]
+            }
+        },
+        {
+            name: "Nicole Monteiro",
+            picks: {
+                "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Australia", "Paraguay"],
+                "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+                "Group F": ["Sweden", "Japan", "Netherlands", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "New Zealand", "Iran"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Senegal", "Norway", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["Croatia", "England", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Leah Parcher",
+            picks: {
+                "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Haiti", "Scotland"],
+                "Group D": ["United States", "Türkiye", "Australia", "Paraguay"],
+                "Group E": ["Germany", "Ivory Coast", "Ecuador", "Curaçao"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "New Zealand", "Iran"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Norway", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Simone",
+            picks: {
+                "Group A": ["South Korea", "Mexico", "Czechia", "South Africa"],
+                "Group B": ["Canada", "Bosnia and Herzegovina", "Switzerland", "Qatar"],
+                "Group C": ["Brazil", "Scotland", "Morocco", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Paraguay", "Australia"],
+                "Group E": ["Germany", "Ivory Coast", "Ecuador", "Curaçao"],
+                "Group F": ["Japan", "Netherlands", "Sweden", "Tunisia"],
+                "Group G": ["Egypt", "Belgium", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
+                "Group I": ["Norway", "France", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Algeria", "Austria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Willow",
+            picks: {
+                "Group A": ["Czechia", "South Africa", "Mexico", "South Korea"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Scotland", "Morocco", "Haiti"],
+                "Group D": ["United States", "Paraguay", "Australia", "Türkiye"],
+                "Group E": ["Ecuador", "Germany", "Curaçao", "Ivory Coast"],
+                "Group F": ["Sweden", "Netherlands", "Japan", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Norway", "Iraq", "Senegal"],
+                "Group J": ["Argentina", "Austria", "Jordan", "Algeria"],
+                "Group K": ["Portugal", "Colombia", "DR Congo", "Uzbekistan"],
+                "Group L": ["Croatia", "England", "Ghana", "Panama"]
+            }
+        },
+        {
+            name: "Oliver Cryns",
+            picks: {
+                "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
+                "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Australia", "Paraguay"],
+                "Group E": ["Germany", "Ecuador", "Curaçao", "Ivory Coast"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Egypt", "Belgium", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group I": ["France", "Norway", "Senegal", "Iraq"],
+                "Group J": ["Argentina", "Algeria", "Austria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
+                "Group L": ["England", "Croatia", "Panama", "Ghana"]
+            }
+        },
+        {
+            name: "Eddy Jackson",
+            picks: {
+                "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
+                "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
+                "Group C": ["Morocco", "Brazil", "Scotland", "Haiti"],
+                "Group D": ["Türkiye", "United States", "Australia", "Paraguay"],
+                "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
+                "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
+                "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+                "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
+                "Group I": ["France", "Senegal", "Norway", "Iraq"],
+                "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
+                "Group K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
+                "Group L": ["England", "Croatia", "Ghana", "Panama"]
             }
         }
     ];
-
-    function renderLeaderboard() {
-        const list = document.getElementById("leaderboardList");
-        list.innerHTML = "";
-        const sorted = [...participants].sort((a, b) => b.points - a.points);
-        sorted.forEach((player, idx) => {
-            list.innerHTML += `
-                <div class="leaderboard-row rank-${idx}">
-                    <div><span class="rank-badge">#${idx+1}</span>${player.name}</div>
-                    <span class="player-points">${player.points} pts</span>
-                </div>`;
-        });
-    }
 
     function renderActiveStage() {
         const stage = stages[currentStageIndex];
@@ -371,27 +551,14 @@
         document.getElementById("nextBtn").disabled = (currentStageIndex === stages.length - 1);
 
         const standingsBody = document.getElementById("standingsBody");
-        const standingsContainer = document.getElementById("standingsContainer");
         const grid = document.getElementById("picksGrid");
         
         grid.innerHTML = "";
         standingsBody.innerHTML = "";
 
-        if (stage === "Knockouts") {
-            standingsContainer.style.display = "none";
-            participants.forEach(p => {
-                grid.innerHTML += `
-                    <div class="player-card">
-                        <h3 class="player-name">👤 ${p.name}</h3>
-                        <div class="pick-row">${p.picks[stage]}</div>
-                    </div>`;
-            });
-            return;
-        }
-
-        standingsContainer.style.display = "block";
         document.getElementById("standingsTitle").textContent = `Live ${stage} Standings`;
 
+        // Sort real-time standings on current data criteria
         let groupTeams = [...(realTimeStandings[stage] || [])];
         groupTeams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
 
@@ -405,25 +572,41 @@
                 </tr>`;
         });
 
-        const realFirstPlaceTeam = groupTeams[0] ? groupTeams[0].team : "";
-        const realSecondPlaceTeam = groupTeams[1] ? groupTeams[1].team : "";
+        // Key positions for evaluation rules
+        const keyAt1 = groupTeams[0] ? groupTeams[0].nameKey : "";
+        const keyAt2 = groupTeams[1] ? groupTeams[1].nameKey : "";
+        const keyAt3 = groupTeams[2] ? groupTeams[2].nameKey : "";
+        const keyAt4 = groupTeams[3] ? groupTeams[3].nameKey : "";
 
+        // Build player profile cards
         participants.forEach(player => {
-            const playerGroupPicks = player.picks[stage] || { first: "N/A", second: "N/A" };
-            const cleanPick1 = playerGroupPicks.first;
-            const cleanPick2 = playerGroupPicks.second;
+            const pk = player.picks[stage] || ["N/A", "N/A", "N/A", "N/A"];
 
-            const isFirstCorrect = (cleanPick1 === realFirstPlaceTeam && realFirstPlaceTeam !== "");
-            const isSecondCorrect = (cleanPick2 === realSecondPlaceTeam && realSecondPlaceTeam !== "");
+            const isP1Correct = (pk[0] === keyAt1 && keyAt1 !== "");
+            const isP2Correct = (pk[1] === keyAt2 && keyAt2 !== "");
+            const isP3Correct = (pk[2] === keyAt3 && keyAt3 !== ""); // Tracks 3rd place indicator
+            const isP4Correct = (pk[3] === keyAt4 && keyAt4 !== "");
+
+            // Pre-process presentation formatting strings
+            const displayTeam1 = flagMapping[pk[0]] || pk[0];
+            const displayTeam2 = flagMapping[pk[1]] || pk[1];
+            const displayTeam3 = flagMapping[pk[2]] || pk[2];
+            const displayTeam4 = flagMapping[pk[3]] || pk[3];
 
             grid.innerHTML += `
                 <div class="player-card">
                     <h3 class="player-name">👤 ${player.name}</h3>
-                    <div class="pick-row ${isFirstCorrect ? 'match-highlight' : ''}">
-                        <span>1st Place:</span> <span>${cleanPick1}</span>
+                    <div class="pick-row ${isP1Correct ? 'match-correct-advance' : ''}">
+                        <span class="pos-num">1st</span> <span>${displayTeam1}</span>
                     </div>
-                    <div class="pick-row ${isSecondCorrect ? 'match-highlight' : ''}">
-                        <span>2nd Place:</span> <span>${cleanPick2}</span>
+                    <div class="pick-row ${isP2Correct ? 'match-correct-advance' : ''}">
+                        <span class="pos-num">2nd</span> <span>${displayTeam2}</span>
+                    </div>
+                    <div class="pick-row ${isP3Correct ? 'match-correct-third' : ''}">
+                        <span class="pos-num">3rd</span> <span>${displayTeam3}</span>
+                    </div>
+                    <div class="pick-row ${isP4Correct ? 'match-correct-advance' : ''}">
+                        <span class="pos-num">4th</span> <span>${displayTeam4}</span>
                     </div>
                 </div>`;
         });
@@ -434,7 +617,7 @@
         renderActiveStage();
     }
 
-    renderLeaderboard();
+    // Initialize layout rendering
     renderActiveStage();
 </script>
 
