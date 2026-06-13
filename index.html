@@ -17,8 +17,6 @@
             /* Dynamic Status Highlights */
             --success-green: #22c55e; 
             --success-bg: rgba(34, 197, 94, 0.12);
-            --warning-yellow: #eab308;
-            --warning-bg: rgba(234, 179, 8, 0.12);
         }
         
         body {
@@ -88,6 +86,34 @@
         .btn:not(:disabled):hover {
             background-color: #1d4ed8;
             box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+        }
+
+        /* UI Legend Panel */
+        .legend-panel {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 15px 20px;
+            border: 1px solid var(--border-slate);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box-green {
+            width: 16px;
+            height: 16px;
+            background-color: var(--success-bg);
+            border: 1px solid var(--success-green);
+            border-radius: 4px;
         }
 
         /* Real Standings Table Style */
@@ -166,8 +192,15 @@
             border-radius: 6px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 14px;
             border: 1px solid transparent;
+        }
+
+        .pick-team-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .pos-num {
@@ -181,13 +214,6 @@
             background-color: var(--success-bg);
             border: 1px solid var(--success-green);
             color: var(--success-green);
-            font-weight: bold;
-        }
-
-        .match-correct-third {
-            background-color: var(--warning-bg);
-            border: 1px solid var(--warning-yellow);
-            color: var(--warning-yellow);
             font-weight: bold;
         }
     </style>
@@ -204,6 +230,18 @@
         <button id="prevBtn" class="btn" onclick="changeStage(-1)">← Prev</button>
         <h2 id="currentStage" class="stage-title">Group A</h2>
         <button id="nextBtn" class="btn" onclick="changeStage(1)">Next →</button>
+    </div>
+
+    <!-- UI Legend Dashboard Addon -->
+    <div class="legend-panel">
+        <div class="legend-item">
+            <div class="legend-box-green"></div>
+            <span><strong>Green Highlight:</strong> Team is currently in this exact spot in the live standings</span>
+        </div>
+        <div class="legend-item">
+            <span>⭐️</span>
+            <span><strong>Star Icon:</strong> Team is selected by the user to advance as a 3rd place wildcard</span>
+        </div>
     </div>
 
     <!-- Real Live Group Standings Table -->
@@ -239,8 +277,6 @@
     /* =========================================================================
       1. REAL TIME TOURNAMENT DATA ENGINE
       =========================================================================
-      To update live data: Just change 'pts' and 'gd' next to any team below.
-      The standings list and player cards refresh/resort dynamically instantly!
     */
     const realTimeStandings = {
         "Group A": [
@@ -317,7 +353,6 @@
         ]
     };
 
-    // Quick map to easily append emojis onto raw player prediction values
     const flagMapping = {
         "Mexico": "🇲🇽 Mexico", "South Korea": "🇰🇷 South Korea", "Czechia": "🇨🇿 Czechia", "South Africa": "🇿🇦 South Africa",
         "Canada": "🇨🇦 Canada", "Switzerland": "🇨🇭 Switzerland", "Bosnia and Herzegovina": "🇧🇦 Bosnia and Herzegovina", "Qatar": "🇶🇦 Qatar",
@@ -339,7 +374,7 @@
     */
     const participants = [
         {
-            name: "Mikey",
+            name: "Mike",
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
@@ -424,7 +459,7 @@
             }
         },
         {
-            name: "Emily Tomlinson",
+            name: "Emily",
             picks: {
                 "Group A": ["Mexico", "South Korea", "South Africa", "Czechia"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -558,7 +593,6 @@
 
         document.getElementById("standingsTitle").textContent = `Live ${stage} Standings`;
 
-        // Sort real-time standings on current data criteria
         let groupTeams = [...(realTimeStandings[stage] || [])];
         groupTeams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
 
@@ -572,22 +606,19 @@
                 </tr>`;
         });
 
-        // Key positions for evaluation rules
         const keyAt1 = groupTeams[0] ? groupTeams[0].nameKey : "";
         const keyAt2 = groupTeams[1] ? groupTeams[1].nameKey : "";
         const keyAt3 = groupTeams[2] ? groupTeams[2].nameKey : "";
         const keyAt4 = groupTeams[3] ? groupTeams[3].nameKey : "";
 
-        // Build player profile cards
         participants.forEach(player => {
             const pk = player.picks[stage] || ["N/A", "N/A", "N/A", "N/A"];
 
             const isP1Correct = (pk[0] === keyAt1 && keyAt1 !== "");
             const isP2Correct = (pk[1] === keyAt2 && keyAt2 !== "");
-            const isP3Correct = (pk[2] === keyAt3 && keyAt3 !== ""); // Tracks 3rd place indicator
+            const isP3Correct = (pk[2] === keyAt3 && keyAt3 !== "");
             const isP4Correct = (pk[3] === keyAt4 && keyAt4 !== "");
 
-            // Pre-process presentation formatting strings
             const displayTeam1 = flagMapping[pk[0]] || pk[0];
             const displayTeam2 = flagMapping[pk[1]] || pk[1];
             const displayTeam3 = flagMapping[pk[2]] || pk[2];
@@ -597,16 +628,20 @@
                 <div class="player-card">
                     <h3 class="player-name">👤 ${player.name}</h3>
                     <div class="pick-row ${isP1Correct ? 'match-correct-advance' : ''}">
-                        <span class="pos-num">1st</span> <span>${displayTeam1}</span>
+                        <span class="pos-num">1st</span> 
+                        <div class="pick-team-container"><span>${displayTeam1}</span></div>
                     </div>
                     <div class="pick-row ${isP2Correct ? 'match-correct-advance' : ''}">
-                        <span class="pos-num">2nd</span> <span>${displayTeam2}</span>
+                        <span class="pos-num">2nd</span> 
+                        <div class="pick-team-container"><span>${displayTeam2}</span></div>
                     </div>
-                    <div class="pick-row ${isP3Correct ? 'match-correct-third' : ''}">
-                        <span class="pos-num">3rd</span> <span>${displayTeam3}</span>
+                    <div class="pick-row ${isP3Correct ? 'match-correct-advance' : ''}">
+                        <span class="pos-num">3rd</span> 
+                        <div class="pick-team-container"><span>${displayTeam3}</span> <span>⭐️</span></div>
                     </div>
                     <div class="pick-row ${isP4Correct ? 'match-correct-advance' : ''}">
-                        <span class="pos-num">4th</span> <span>${displayTeam4}</span>
+                        <span class="pos-num">4th</span> 
+                        <div class="pick-team-container"><span>${displayTeam4}</span></div>
                     </div>
                 </div>`;
         });
@@ -617,7 +652,6 @@
         renderActiveStage();
     }
 
-    // Initialize layout rendering
     renderActiveStage();
 </script>
 
