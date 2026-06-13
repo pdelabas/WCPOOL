@@ -240,7 +240,7 @@
         </div>
         <div class="legend-item">
             <span>⭐️</span>
-            <span><strong>Star Icon:</strong> Team is selected by the user to advance as a 3rd place wildcard</span>
+            <span><strong>Star Icon:</strong> Team was chosen by this player as an advancing 3rd-place Wildcard</span>
         </div>
     </div>
 
@@ -298,9 +298,9 @@
             { team: "🇭🇹 Haiti", nameKey: "Haiti", pts: 0, gd: 0 }
         ],
         "Group D": [
-            { team: "🇺🇸 United States", nameKey: "United States", pts: 0, gd: 0 },
+            { team: "🇺🇸 United States", nameKey: "United States", pts: 3, gd: 3 },
             { team: "🇹🇷 Türkiye", nameKey: "Türkiye", pts: 0, gd: 0 },
-            { team: "🇵🇾 Paraguay", nameKey: "Paraguay", pts: 0, gd: 0 },
+            { team: "🇵🇾 Paraguay", nameKey: "Paraguay", pts: 0, gd: -3 },
             { team: "🇦🇺 Australia", nameKey: "Australia", pts: 0, gd: 0 }
         ],
         "Group E": [
@@ -353,6 +353,22 @@
         ]
     };
 
+    // Dictionary translating plain names to 3-letter bracket tracking codes
+    const codeMapping = {
+        "Mexico": "MEX", "South Korea": "KOR", "Czechia": "CZE", "South Africa": "RSA",
+        "Canada": "CAN", "Switzerland": "SUI", "Bosnia and Herzegovina": "BIH", "Qatar": "QAT",
+        "Brazil": "BRA", "Morocco": "MAR", "Scotland": "SCO", "Haiti": "HAI",
+        "United States": "USA", "Türkiye": "TUR", "Paraguay": "PAR", "Australia": "AUS",
+        "Germany": "GER", "Ecuador": "ECU", "Ivory Coast": "CIV", "Curaçao": "CUW",
+        "Netherlands": "NED", "Japan": "JPN", "Sweden": "SWE", "Tunisia": "TUN",
+        "Belgium": "BEL", "Egypt": "EGY", "Iran": "IRN", "New Zealand": "NZL",
+        "Spain": "ESP", "Uruguay": "URU", "Saudi Arabia": "KSA", "Cape Verde": "CPV",
+        "France": "FRA", "Norway": "NOR", "Senegal": "SEN", "Iraq": "IRQ",
+        "Argentina": "ARG", "Austria": "AUT", "Algeria": "ALG", "Jordan": "JOR",
+        "Portugal": "POR", "Colombia": "COL", "DR Congo": "COD", "Uzbekistan": "UZB",
+        "England": "ENG", "Croatia": "CRO", "Ghana": "GHA", "Panama": "PAN"
+    };
+
     const flagMapping = {
         "Mexico": "🇲🇽 Mexico", "South Korea": "🇰🇷 South Korea", "Czechia": "🇨🇿 Czechia", "South Africa": "🇿🇦 South Africa",
         "Canada": "🇨🇦 Canada", "Switzerland": "🇨🇭 Switzerland", "Bosnia and Herzegovina": "🇧🇦 Bosnia and Herzegovina", "Qatar": "🇶🇦 Qatar",
@@ -374,7 +390,8 @@
     */
     const participants = [
         {
-            name: "Mike",
+            name: "Michael",
+            wildcards: ["CZE", "BIH", "SCO", "AUS", "CIV", "SWE", "EGY", "SEN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
@@ -392,6 +409,7 @@
         },
         {
             name: "Pat",
+            wildcards: ["CZE", "BIH", "SCO", "PAR", "CIV", "TUN", "IRN", "SEN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
@@ -409,6 +427,7 @@
         },
         {
             name: "Eve",
+            wildcards: ["MEX", "QAT", "MAR", "AUS", "GER", "SWE", "IRN", "ENG"],
             picks: {
                 "Group A": ["South Korea", "South Africa", "Mexico", "Czechia"],
                 "Group B": ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
@@ -426,6 +445,7 @@
         },
         {
             name: "Liv",
+            wildcards: ["CZE", "BIH", "SCO", "TUR", "ECU", "SWE", "IRN", "SEN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -443,6 +463,7 @@
         },
         {
             name: "Alessandro",
+            wildcards: ["CZE", "BIH", "SCO", "AUS", "ECU", "JPN", "NZL", "GHA"],
             picks: {
                 "Group A": ["South Korea", "Mexico", "Czechia", "South Africa"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -460,6 +481,7 @@
         },
         {
             name: "Emily",
+            wildcards: ["RSA", "BIH", "SCO", "TUR", "CIV", "SWE", "EGY", "NOR"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "South Africa", "Czechia"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -477,6 +499,7 @@
         },
         {
             name: "Nicole",
+            wildcards: ["KOR", "BIH", "SCO", "AUS", "CIV", "NED", "NZL", "GHA"],
             picks: {
                 "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -494,6 +517,7 @@
         },
         {
             name: "Leah",
+            wildcards: ["CZE", "BIH", "HAI", "AUS", "ECU", "SWE", "NZL", "GHA"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -511,6 +535,7 @@
         },
         {
             name: "Simone",
+            wildcards: ["CZE", "SUI", "MAR", "PAR", "ECU", "SWE", "IRN", "SEN"],
             picks: {
                 "Group A": ["South Korea", "Mexico", "Czechia", "South Africa"],
                 "Group B": ["Canada", "Bosnia and Herzegovina", "Switzerland", "Qatar"],
@@ -528,6 +553,7 @@
         },
         {
             name: "Willow",
+            wildcards: ["MEX", "BIH", "MAR", "AUS", "CUW", "JPN", "IRN", "GHA"],
             picks: {
                 "Group A": ["Czechia", "South Africa", "Mexico", "South Korea"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -544,7 +570,8 @@
             }
         },
         {
-            name: "Oliver",
+            name: "Oliver Cryns",
+            wildcards: ["SCO", "SEN", "SWE", "CZE", "AUS", "UZB", "BIH", "IRN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
@@ -562,6 +589,7 @@
         },
         {
             name: "Eddy",
+            wildcards: ["SCO", "BIH", "KOR", "SWE", "NOR", "CIV", "GHA", "AUS"],
             picks: {
                 "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
                 "Group B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
@@ -619,6 +647,10 @@
             const isP3Correct = (pk[2] === keyAt3 && keyAt3 !== "");
             const isP4Correct = (pk[3] === keyAt4 && keyAt4 !== "");
 
+            // Convert plain text name of the 3rd place team to its 3 letter code to check against wildcards
+            const thirdPlaceCode = codeMapping[pk[2]] || "";
+            const hasStar = player.wildcards.includes(thirdPlaceCode);
+
             const displayTeam1 = flagMapping[pk[0]] || pk[0];
             const displayTeam2 = flagMapping[pk[1]] || pk[1];
             const displayTeam3 = flagMapping[pk[2]] || pk[2];
@@ -637,7 +669,10 @@
                     </div>
                     <div class="pick-row ${isP3Correct ? 'match-correct-advance' : ''}">
                         <span class="pos-num">3rd</span> 
-                        <div class="pick-team-container"><span>${displayTeam3}</span> <span>⭐️</span></div>
+                        <div class="pick-team-container">
+                            <span>${displayTeam3}</span> 
+                            ${hasStar ? '<span>⭐️</span>' : ''}
+                        </div>
                     </div>
                     <div class="pick-row ${isP4Correct ? 'match-correct-advance' : ''}">
                         <span class="pos-num">4th</span> 
