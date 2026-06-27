@@ -18,6 +18,7 @@
             --success-green: #22c55e; 
             --success-bg: rgba(34, 197, 94, 0.12);
             --cutoff-line: #ef4444;   /* Red for wildcard cutoff */
+            --gold-accent: #eab308;   /* Gold for live points score */
         }
         
         body {
@@ -166,9 +167,26 @@
             border-bottom: 2px dashed var(--cutoff-line) !important;
         }
 
+        .meta-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-end;
+        }
+
+        .points-badge {
+            font-size: 13px;
+            background: rgba(234, 179, 8, 0.15);
+            color: var(--gold-accent);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
         .wildcard-score {
-            font-size: 12px;
-            background: rgba(59, 130, 246, 0.2);
+            font-size: 11px;
+            background: rgba(59, 130, 246, 0.15);
             color: #93c5fd;
             padding: 2px 6px;
             border-radius: 4px;
@@ -263,11 +281,11 @@
     <div class="legend-panel">
         <div class="legend-item">
             <div class="legend-box-green"></div>
-            <span><strong>Green Highlight:</strong> Team is currently sitting in this exact spot in the standings</span>
+            <span><strong>Green Highlight:</strong> Predicted position perfectly matches live standings</span>
         </div>
         <div class="legend-item">
             <span>⭐️</span>
-            <span><strong>Star Icon:</strong> Player selected this team as an advancing 3rd-place Wildcard</span>
+            <span><strong>Star Icon:</strong> Team selected by player as an advancing 3rd-place Wildcard</span>
         </div>
     </div>
 
@@ -307,7 +325,7 @@
 
     <!-- Player Predictions Matrix Layout -->
     <div class="picks-section">
-        <h3>👥 Player Predictions</h3>
+        <h3>👥 Player Predictions & Standings</h3>
         <div id="picksGrid" class="picks-grid"></div>
     </div>
 </div>
@@ -434,7 +452,7 @@
     */
     const participants = [
         {
-            name: "Michael Fournier",
+            name: "Mike",
             wildcards: ["CZE", "BIH", "PAR", "CIV", "SWE", "ALG", "SEN", "IRN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
@@ -488,7 +506,7 @@
             }
         },
         {
-            name: "Olivia Tonelli",
+            name: "Liv",
             wildcards: ["ECU", "SWE", "CZE", "SCO", "IRN", "TUR", "SEN", "ALG"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
@@ -513,7 +531,7 @@
                 "Group B": ["Switzerland", "Canada", "Bosnia and Herzegovina", "Qatar"],
                 "Group C": ["Brazil", "Morocco", "Scotland", "Haiti"],
                 "Group D": ["Türkiye", "United States", "Australia", "Paraguay"],
-                "Group E": ["Ivory Coast", "Germany", "Ecuador", "Curaçao"],
+                "Group E": ["Camp d'Ivoire", "Germany", "Ecuador", "Curaçao"],
                 "Group F": ["Netherlands", "Sweden", "Japan", "Tunisia"],
                 "Group G": ["Belgium", "Egypt", "New Zealand", "Iran"],
                 "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
@@ -524,7 +542,7 @@
             }
         },
         {
-            name: "Emily Tomlinson",
+            name: "Emily",
             wildcards: ["BIH", "TUR", "EGY", "SWE", "AUT", "CIV", "NOR", "RSA"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "South Africa", "Czechia"],
@@ -542,7 +560,7 @@
             }
         },
         {
-            name: "Nicole Monteiro",
+            name: "Nicole",
             wildcards: ["NED", "KOR", "AUS", "SCO", "BIH", "NZL", "GHA", "KSA"],
             picks: {
                 "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
@@ -560,7 +578,7 @@
             }
         },
         {
-            name: "Leah Parcher",
+            name: "Leah",
             wildcards: ["SEN", "ALG", "SWE", "AUS", "GHA", "ECU", "BIH", "CZE"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
@@ -614,7 +632,7 @@
             }
         },
         {
-            name: "Oliver Cryns",
+            name: "Oliver",
             wildcards: ["SCO", "SEN", "SWE", "CZE", "AUS", "UZB", "BIH", "IRN"],
             picks: {
                 "Group A": ["Mexico", "South Korea", "Czechia", "South Africa"],
@@ -632,7 +650,7 @@
             }
         },
         {
-            name: "Eddy Jackson",
+            name: "Eddy",
             wildcards: ["SCO", "BIH", "KOR", "SWE", "NOR", "CIV", "GHA", "AUS"],
             picks: {
                 "Group A": ["Mexico", "Czechia", "South Korea", "South Africa"],
@@ -642,7 +660,7 @@
                 "Group E": ["Germany", "Ecuador", "Ivory Coast", "Curaçao"],
                 "Group F": ["Netherlands", "Japan", "Sweden", "Tunisia"],
                 "Group G": ["Belgium", "Egypt", "Iran", "New Zealand"],
-                "Group H": ["Spain", "Uruguay", "Saudi Arabia", "Cape Verde"],
+                "Group H": ["Spain", "Uruguay", "Cape Verde", "Saudi Arabia"],
                 "Group I": ["France", "Senegal", "Norway", "Iraq"],
                 "Group J": ["Argentina", "Austria", "Algeria", "Jordan"],
                 "Group K": ["Portugal", "Colombia", "Uzbekistan", "DR Congo"],
@@ -652,7 +670,7 @@
     ];
 
     /* =========================================================================
-      3. ENGINE LOGIC FOR ACTIVE STANDINGS & GLOBAL WILD CARDS
+      3. CORE ENGINE LOGIC FOR LIVE GLOBAL SCORING & TABLES
       =========================================================================
     */
     function getGlobalThirdPlaceTeams() {
@@ -660,7 +678,6 @@
         
         stages.forEach(stageName => {
             let teams = [...realTimeStandings[stageName]];
-            // Sort to find 3rd place accurately
             teams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
             
             if(teams[2]) {
@@ -674,9 +691,39 @@
             }
         });
 
-        // Sort all 12 third-place teams against each other
         thirdPlaceTeams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
         return thirdPlaceTeams;
+    }
+
+    function calculateTotalPoints(player, advancingWildcardCodes) {
+        let score = 0;
+
+        // 1. Calculate standard layout finish position matches across all 12 groups
+        stages.forEach(stageName => {
+            let realSorted = [...realTimeStandings[stageName]];
+            realSorted.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
+
+            const keyAt1 = realSorted[0] ? realSorted[0].nameKey : "";
+            const keyAt2 = realSorted[1] ? realSorted[1].nameKey : "";
+            const keyAt3 = realSorted[2] ? realSorted[2].nameKey : "";
+            const keyAt4 = realSorted[3] ? realSorted[3].nameKey : "";
+
+            const pk = player.picks[stageName] || [];
+
+            if (pk[0] === keyAt1 && keyAt1 !== "") score += 25; // 1st Place Match
+            if (pk[1] === keyAt2 && keyAt2 !== "") score += 15; // 2nd Place Match
+            if (pk[2] === keyAt3 && keyAt3 !== "") score += 10; // 3rd Place Match
+            if (pk[3] === keyAt4 && keyAt4 !== "") score += 5;  // 4th Place Match
+        });
+
+        // 2. Add Wildcard Advancement Bonuses (+5 points for each team sitting inside Top 8)
+        player.wildcards.forEach(code => {
+            if (advancingWildcardCodes.includes(code)) {
+                score += 5;
+            }
+        });
+
+        return score;
     }
 
     function renderActiveStage() {
@@ -695,7 +742,7 @@
 
         document.getElementById("standingsTitle").textContent = `Live ${stage} Standings`;
 
-        // 1. Render Current Slider Group Standings Table
+        // Sort out active group rankings
         let groupTeams = [...(realTimeStandings[stage] || [])];
         groupTeams.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
 
@@ -714,14 +761,12 @@
         const keyAt3 = groupTeams[2] ? groupTeams[2].nameKey : "";
         const keyAt4 = groupTeams[3] ? groupTeams[3].nameKey : "";
 
-        // 2. Fetch and Render the 3rd-Place Wildcard Table
+        // Process Global Wildcards
         const globalThirds = getGlobalThirdPlaceTeams();
-        
-        // Grab the 3-letter codes of the top 8 teams currently advancing on wildcards
         const advancingWildcardCodes = globalThirds.slice(0, 8).map(t => codeMapping[t.nameKey]);
 
         globalThirds.forEach((team, idx) => {
-            let rowClass = (idx === 7) ? 'class="cutoff-row"' : ''; // Line style after top 8
+            let rowClass = (idx === 7) ? 'class="cutoff-row"' : '';
             wildcardStandingsBody.innerHTML += `
                 <tr ${rowClass}>
                     <td><strong>${idx + 1}</strong></td>
@@ -731,8 +776,17 @@
                 </tr>`;
         });
 
-        // 3. Render Player Matrix Cards & Process live counters
-        participants.forEach(player => {
+        // Sort participants based on their dynamic total live score ranking
+        let rankedParticipants = [...participants].map(p => {
+            return {
+                ...p,
+                liveScore: calculateTotalPoints(p, advancingWildcardCodes)
+            };
+        });
+        rankedParticipants.sort((a, b) => b.liveScore - a.liveScore);
+
+        // Render Participant Matrix Viewcards
+        rankedParticipants.forEach(player => {
             const pk = player.picks[stage] || ["N/A", "N/A", "N/A", "N/A"];
 
             const isP1Correct = (pk[0] === keyAt1 && keyAt1 !== "");
@@ -748,7 +802,7 @@
             const displayTeam3 = flagMapping[pk[2]] || pk[2];
             const displayTeam4 = flagMapping[pk[3]] || pk[3];
 
-            // Calculate overall accurate active wildcard predictions for this user across all groups
+            // Count green wildcards
             let accurateWildcardCount = 0;
             player.wildcards.forEach(code => {
                 if (advancingWildcardCodes.includes(code)) {
@@ -760,7 +814,10 @@
                 <div class="player-card">
                     <div class="player-header">
                         <h3 class="player-name">👤 ${player.name}</h3>
-                        <span class="wildcard-score" title="How many of their wildcard teams are currently qualifying in the top 8 slots">${accurateWildcardCount} Wildcards Green</span>
+                        <div class="meta-badges">
+                            <span class="points-badge">${player.liveScore} PTS</span>
+                            <span class="wildcard-score">${accurateWildcardCount} Wildcards Green</span>
+                        </div>
                     </div>
                     <div class="pick-row ${isP1Correct ? 'match-correct-advance' : ''}">
                         <span class="pos-num">1st</span> 
